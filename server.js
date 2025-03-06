@@ -12,12 +12,22 @@ connectdb()
 
 
 app.use(express.json());
-app.use(
-	cors({
-		origin:"http://localhost:5174",
-		credentials:true,
-	})
-)
+
+const allowedOrigins = [
+	"http://localhost:5174",  // Local Dev
+	"https://task-management-frontend-kohl.vercel.app" // Deployed Frontend
+  ];
+  
+  app.use(cors({
+	origin: function (origin, callback) {
+	  if (!origin || allowedOrigins.includes(origin)) {
+		callback(null, true);
+	  } else {
+		callback(new Error("Not allowed by CORS"));
+	  }
+	},
+	credentials: true // If using cookies/authentication
+  }));
 
 
 //mount route
